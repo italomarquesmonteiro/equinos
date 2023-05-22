@@ -66,7 +66,11 @@ df_equino <- municipios_br |>
   dplyr::left_join(df) |>
   dplyr::glimpse()
 ```
+ 
 
+
+ - Efetivo de equinos [{`Equus Caballus`}](https://pt.wikipedia.org/wiki/Cavalo) 
+- No estado do: [{`Santa Catarina`}](https://pt.wikipedia.org/wiki/Santa_Catarina)
 ```{r}
 eq_sc <- df_equino |>
   dplyr::filter(name_state == "Santa Catarina") |>
@@ -107,14 +111,115 @@ eq_sc <- df_equino |>
       height = unit(0.9, "cm"),
       pad_x = unit(13, "cm"),
       pad_y = unit(3, "cm"))
+
 eq_sc
 ```
 
 ```{r}
-ggsave("C:/Users/italo/OneDrive/Área de Trabalho/GitHub/equinos/Image/equino.png",
+ggsave("C:/Users/italo/OneDrive/Área de Trabalho/
+    GitHub/equinos/Image/equino.png",
       plot = eq_sc,
-      dpi = 1200,
-      height = ,
-      width =)
+      dpi = 1200)
 ```
 
+
+- Efetivo de equinos [{`Equus Caballus`}](https://pt.wikipedia.org/wiki/Cavalo) 
+- No estado do: [{`Rio Grande do Sul`}](https://pt.wikipedia.org/wiki/Rio_Grande_do_Sul) 
+```{r}
+eq_rs <- df_equino |>
+  dplyr::filter(name_state == "Rio Grande do Sul") |>
+  dplyr::mutate(
+    cab_equino_rs = cut(
+      quantidade_animais, breaks = c(
+        0, 100, 500, 1000, 2000, 5000,
+        7000, 10000, 13000, 17000, 20000, 22000, Inf),
+        labels = c("< 100", "101-500", "501-1000", "1001-2000",
+                "701-1000", "1001-1500", "1501-2000", "2001-5000",
+                "5001-10000", "10000-17000",  "17001-22000", "22001-26000")
+    )
+  ) |>
+  ggplot2::ggplot() +
+  geom_sf(aes(fill = factor(cab_equino_rs))) +
+  scale_fill_viridis_d() +
+    theme(legend.position = c(0.2, 0.2),
+    panel.grid.major = element_line(colour = "gray95"),
+    panel.background = element_rect(fill = "gray95"),
+    legend.background = element_rect(
+        fill = "grey95", colour = "gray95", size = 1)) +
+    labs(
+        fill = "Número de animais",
+        x = "Longitude",
+        y = "Latitude") +
+    annotate("text", x = -54, y = -27, color = "gray30", size = 8,
+        label = "Efetivo equino do Rio Grande do Sul - BR") +
+    annotate("text", x = -50.8, y = -32.5, color = "gray40", size = 5,
+        label = "Pesquisa pecuária municipal (2019)") +
+    annotate("text", x = -51, y = -33,
+    label = "Source: IBGE [open data(2023)]
+    by Ítalo Monteiro" , color = "gray50") +
+    ggspatial::annotation_scale(
+      height = unit(0.2, "cm"),
+      pad_x = unit(15, "cm"),
+      pad_y = unit(0.5, "cm")) +
+    ggspatial::annotation_north_arrow(
+      width = unit(0.7, "cm"),
+      height = unit(0.9, "cm"),
+      pad_x = unit(17, "cm"),
+      pad_y = unit(1, "cm"))
+
+eq_rs
+```
+
+```{r}
+#list <- geobr::list_geobr() |> tibble::view()
+#rs <- geobr::read_state(code_state = "RS", year = 2019)
+
+pampa <- geobr::read_biomes(year = 2019) |> 
+  dplyr::filter(name_biome == "Pampa") |>
+  ggplot2::ggplot() +
+    geom_sf(data = rs,
+          fill = "white",
+          color = "black",
+          size = .15,
+          show.legend = FALSE) +
+    geom_sf(
+          fill = "#51884F",
+          color = "black",
+          size = .15,
+          show.legend = FALSE) +
+    theme_void() +
+    theme(
+    panel.grid.major = element_line(colour = "gray95"),
+    panel.background = element_rect(fill = "gray95"),
+    legend.background = element_rect(
+        fill = "grey95", colour = "gray95", size = 1)) +
+    scale_y_continuous(breaks = NULL) +
+    labs(
+        fill = "Biome Pampa",
+        x = "Longitude",
+        y = "Latitude") +
+    annotate("text", x = -56, y = -27, color = "gray30", size = 8,
+        label = "Rio Grande do Sul - BR") +
+    annotate("text", x = -53, y = -30.5, color = "black", size = 10,
+        label = "Bioma Pampa") +
+    annotate("text", x = -56, y = -32,
+    label = "Source: IBGE [open data(2019)]
+    by Ítalo Monteiro" , color = "gray50") +
+    ggspatial::annotation_scale(
+      height = unit(0.2, "cm"),
+      pad_x = unit(15, "cm"),
+      pad_y = unit(0.5, "cm")) +
+    ggspatial::annotation_north_arrow(
+      width = unit(0.7, "cm"),
+      height = unit(0.9, "cm"),
+      pad_x = unit(17, "cm"),
+      pad_y = unit(1, "cm"))
+pampa
+```
+
+```{r}
+ggsave("C:/Users/italo/OneDrive/Área de Trabalho/
+    GitHub/equinos/Image/pampa.png",
+      plot = pampa,
+      dpi = 1200)
+```
