@@ -222,4 +222,3 @@ ggsave("C:/Users/italo/OneDrive/Área de Trabalho//equino_rs.png",
       plot = eq_rs,
       dpi = 1200)
 ```
-C:\Users\italo\OneDrive\Área de Trabalho\GitHub\equinos\Image
